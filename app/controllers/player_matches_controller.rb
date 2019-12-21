@@ -1,6 +1,6 @@
 class PlayerMatchesController < ApplicationController
-  def create
-    new = PlayerMatch.create(player_1_id:, player_2_id:, match_id: )
-    new.save
-  end
+  def index
+    playerMatches = PlayerMatch.all
+    render json: playerMatches, include: [ :player_1, :player_2, :match]
+  end 
 end
