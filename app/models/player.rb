@@ -1,3 +1,4 @@
 class Player < ApplicationRecord
-  has_many :matches, through: :PlayerMatches 
+  has_many :PlayerMatches
+  has_many :matches, through: :PlayerMatches
 end
