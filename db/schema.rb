@@ -46,6 +46,6 @@ ActiveRecord::Schema.define(version: 2019_12_20_202129) do
   end
 
   add_foreign_key "player_matches", "matches"
-  add_foreign_key "player_matches", "player_1s"
-  add_foreign_key "player_matches", "player_2s"
+  add_foreign_key "player_matches", "players", column: "player_1_id"
+  add_foreign_key "player_matches", "players", column: "player_2_id"
 end
