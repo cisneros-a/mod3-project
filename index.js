@@ -4,6 +4,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let newSubmitButton = document.querySelector('#submit-new')
   let cohortSelect = document.querySelector('#existing-cohort')
   let userForms = document.querySelectorAll(".user-form");
+
   
   
 
@@ -11,35 +12,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let playersURL = 'http://localhost:3000/players'
   let matchesURL = 'http://localhost:3000/matches'
   
-  function getPlayerMatches(){
-    fetch(playerMatchesURL)
-    .then(res => res.json())
-    .then(data => console.log(data))
-  }
-  function getPlayers() {
-    fetch(playersURL)
-    .then(res => res.json())
-    .then(data => data)
-  };
-   
-  function getMatches(){
-    fetch(matchesURL)
-    .then(res => res.json())
-    .then(data => console.log(data))
-  }
 
-  // getPlayers()
-  // getMatches()
-  // getPlayerMatches()
-
-  // function getUserForms() {
-  //   window.onload = function() {
-  //     userForms.forEach(form => {
-  //       form.style.display = "block";
-        
-  //     })
-  //   }}
-
+  
   
   newSubmitButton.addEventListener('click', e => {
     e.preventDefault();
@@ -55,13 +29,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
       username: username,
       cohort: cohort
      }
+     
      postFetch(playersURL, data)
     } else {
       console.log(`no info`)
     }
 
-    removeForms(userForms)
-    goToMenu(username)
+    hideForms(userForms)
+    fetch(playersURL)
+    .then(res => res.json())
+    .then(data => goToMainMenu(username, data))
+    // goToMainMenu(username)
      
   }) 
 
@@ -70,8 +48,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let studentDropdown = document.getElementById('existing-students');
     var username = studentDropdown.options[studentDropdown.selectedIndex].innerText;
     
-    removeForms(userForms)
-    goToMenu(username)
+    hideForms(userForms)
+    fetch(playersURL)
+    .then(res => res.json())
+    .then(data => goToMainMenu(username, data))
 
   })
   
@@ -95,11 +75,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }));
   }
 
-  function goToMenu(username){
+  function goToMainMenu(username, data){
+    let logged_in = data.find(player => player.username == username)
+    let host_id = logged_in.id
     let greetUser = document.querySelector('.logged-in-user')
     let createButton = document.querySelector('.create-match')
     greetUser.innerHTML = `<u>Welcome, ${username}!</u>`
     createButton.style.display = 'block';
+    createButton.addEventListener('click', e => {
+      let data = {winner_id: null,
+        loser_id: null,
+        tournament_id: null,
+        host_id: host_id.toString()
+       }  
+       postFetch(matchesURL, data)    
+    })
   }
 
   
@@ -115,11 +105,28 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }) 
   }
 
-  function removeForms(forms){
+  function hideForms(forms){
     forms.forEach(form => {
       form.style.display = "none";
     })
   }
-  //  getUserForms()
+
+  function getPlayerMatches(){
+    fetch(playerMatchesURL)
+    .then(res => res.json())
+    .then(data => console.log(data))
+  }
+
+  function getPlayers() {
+    fetch(playersURL)
+    .then(res => res.json())
+    .then(data => main)
+  };
+   
+  function getMatches(){
+    fetch(matchesURL)
+    .then(res => res.json())
+    .then(data => console.log(data))
+  }
 
 })
