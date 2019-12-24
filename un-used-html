@@ -1,0 +1,20 @@
+ <div class="btn-group create-new">
+    <a href="#" class="btn btn-success">Create</a>
+    <a href="#" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></a>
+    <ul class="dropdown-menu">
+      <li><a href="#">Action</a></li>
+    <li><a href="#">Another action</a></li>
+     </ul>
+  </div>
+
+  <div class="btn-group">
+    <a href="#" class="btn btn-warning">Warning</a>
+    <a href="#" class="btn btn-warning dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+    <ul class="dropdown-menu">
+      <li><a href="#">Action</a></li>
+      <li><a href="#">Another action</a></li>
+      <li><a href="#">Something else here</a></li>
+      <li class="divider"></li>
+      <li><a href="#">Separated link</a></li>
+    </ul>
+  </div>
