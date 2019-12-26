@@ -4,7 +4,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let newSubmitButton = document.querySelector('#submit-new')
   let cohortSelect = document.querySelector('#existing-cohort')
   let userForms = document.querySelectorAll(".user-form");
-
+  let greetUser = document.querySelector('.logged-in-user')
   
   
 
@@ -29,16 +29,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
       username: username,
       cohort: cohort
      }
-     
+
      postFetch(playersURL, data)
+
+     hide(userForms)
+     fetch(playersURL)
+     .then(res => res.json())
+     .then(data => goToMainMenu(username, data))
     } else {
       console.log(`no info`)
     }
 
-    hideForms(userForms)
-    fetch(playersURL)
-    .then(res => res.json())
-    .then(data => goToMainMenu(username, data))
+   
     // goToMainMenu(username)
      
   }) 
@@ -48,7 +50,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let studentDropdown = document.getElementById('existing-students');
     var username = studentDropdown.options[studentDropdown.selectedIndex].innerText;
     
-    hideForms(userForms)
+    hide(userForms)
     fetch(playersURL)
     .then(res => res.json())
     .then(data => goToMainMenu(username, data))
@@ -75,14 +77,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }));
   }
 
-  function goToMainMenu(username, data){
-    let logged_in = data.find(player => player.username == username)
+  function goToMainMenu(username, playersData){
+    let logged_in = playersData.find(player => player.username == username)
     let host_id = logged_in.id
-    let greetUser = document.querySelector('.logged-in-user')
-    let createButton = document.querySelector('.create-match')
-    greetUser.innerHTML = `<u>Welcome, ${username}!</u>`
-    createButton.style.display = 'block';
-    createButton.addEventListener('click', e => {
+    let createMatchButton = document.querySelector('.create-match')
+    let joinMatchButton = document.querySelector('.join-match')
+    greetUser.innerHTML = `Welcome, ${username}!`
+    show(createMatchButton)
+    show(joinMatchButton)
+    createMatchButton.addEventListener('click', e => {
       let data = {winner_id: null,
         loser_id: null,
         tournament_id: null,
@@ -90,10 +93,53 @@ window.addEventListener('DOMContentLoaded', (event) => {
        }  
        postFetch(matchesURL, data)    
     })
+    joinMatchButton.addEventListener('click', e =>{
+      showExistingMatches(username, playersData)
+    })
   }
 
-  
   // <---------------Helper Methods------------->
+  function showExistingMatches(username, playersData){
+    
+    fetch(matchesURL)
+    .then(res => res.json())
+    .then(matchesData => matchesData.forEach(match => {
+      let logged_in = playersData.find(player => player.username == username)
+      if (match.host_id){
+        let hostName = playersData.find(player => player.id == match.host_id).username
+        let matchList = document.querySelector('.matches-list')
+        let matchLi = document.createElement('li')
+        matchLi.innerHTML = `<h5>Match hosted by ${hostName}.</h5>`
+        button = document.createElement('button')
+        button.innerText = "join"
+        button.setAttribute('id', `${match.host_id}`)
+        matchList.appendChild(matchLi) 
+        matchList.appendChild(button)
+        // console.log(logged_in.id)
+       
+        button.addEventListener('click', e => {
+          // console.log(match.host_id)
+          let data = {
+            player_1_id: match.host_id,
+            player_2_id: logged_in.id,
+            match_id: match.id
+           }
+           postFetch(playerMatchesURL, data)
+
+           buttons = document.querySelectorAll('button')
+           hide(buttons)
+           matchList.style.display = 'none'
+           
+           greetUser.innerHTML = `You have joined ${hostName}'s match!`
+
+        })
+        
+      }
+      
+    }))    
+  }
+
+
   function postFetch(url, data){
   fetch(url, {
     method: 'POST',
@@ -105,7 +151,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }) 
   }
 
-  function hideForms(forms){
+  function hide(forms){
     forms.forEach(form => {
       form.style.display = "none";
     })
@@ -127,6 +173,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
     fetch(matchesURL)
     .then(res => res.json())
     .then(data => console.log(data))
+  }
+
+  function show(item){
+    item.style.display = 'block';
   }
 
 })

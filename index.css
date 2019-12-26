@@ -4,6 +4,15 @@ body {
 
 
 .create-match {
+  display: flex;
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; 
+  padding: 30px;
+}
+
+.join-match {
+  display: flex;
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; 
