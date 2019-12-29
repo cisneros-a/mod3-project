@@ -6,6 +6,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let userForms = document.querySelectorAll(".user-form");
   let greetUser = document.querySelector('.logged-in-user')
   
+
+    let p1Score = 0
+    let p2Score = 0
+    
+    let p1ScoreDiv = document.getElementsByClassName('player-1-score')[0]
+    let p2ScoreDiv = document.getElementsByClassName('player-2-score')[0]
+    let winnerDiv = document.getElementsByClassName('winner')[0]
+    let p1WinCountDiv = document.querySelector('.winner-1-count')
+    let p2WinCountDiv = document.querySelector('.winner-2-count')
+    let limit 
+    let gameInfo = document.querySelector('#game-info')
   
 
   let playerMatchesURL = 'http://localhost:3000/player_matches'
@@ -13,6 +24,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let matchesURL = 'http://localhost:3000/matches'
   
 
+  clearGameInfo()
   
   
   newSubmitButton.addEventListener('click', e => {
@@ -77,6 +89,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }));
   }
 
+  // <==============================Main Functions=====================================>
+
+
   function goToMainMenu(username, playersData){
     let logged_in = playersData.find(player => player.username == username)
     let host_id = logged_in.id
@@ -91,14 +106,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
         tournament_id: null,
         host_id: host_id.toString()
        }  
-       postFetch(matchesURL, data)    
+       postFetch(matchesURL, data)   
+       greetUser.innerHTML = `You have created a match! Please wait for someone to join.`
+
     })
     joinMatchButton.addEventListener('click', e =>{
       showExistingMatches(username, playersData)
     })
   }
 
-  // <---------------Helper Methods------------->
+
+ 
   function showExistingMatches(username, playersData){
     
     fetch(matchesURL)
@@ -116,7 +134,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         matchList.appendChild(matchLi) 
         matchList.appendChild(button)
         // console.log(logged_in.id)
-       
+        
         button.addEventListener('click', e => {
           // console.log(match.host_id)
           let data = {
@@ -124,21 +142,82 @@ window.addEventListener('DOMContentLoaded', (event) => {
             player_2_id: logged_in.id,
             match_id: match.id
            }
-           postFetch(playerMatchesURL, data)
+
+          let data2 = {
+            winner_id: null,
+            loser_id: null,
+            host_id: null
+          }
+          let updatedMatchURL = `http://localhost:3000/matches/${match.id}`
+          fetch(playerMatchesURL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+              body: JSON.stringify(data)
+            }).then(patchFetch(updatedMatchURL, data2))
 
            buttons = document.querySelectorAll('button')
            hide(buttons)
            matchList.style.display = 'none'
            
            greetUser.innerHTML = `You have joined ${hostName}'s match!`
-
-        })
-        
-      }
-      
+           keepscore(11, hostName, logged_in.username, 3)
+        }) 
+      } 
     }))    
   }
 
+  function keepscore(limit, p1name, p2name, bestOf) {
+    console.log('--------------------------------------------------------')
+    greetUser.innerHTML = ``
+    gameInfo.style.display = 'block';
+    document.querySelector('.user-form').style.display = "none"
+    bestOfSets = Math.ceil(bestOf/2)
+    
+    displayLimit = document.querySelector('.display-limit')
+    displayLimit.innerText = `Score ${limit} points to win!`
+    // <div class='player1-name-score'> </div>
+    let p1ns = document.querySelector('.player1-name-score')
+    let p2ns = document.querySelector('.player2-name-score') 
+    p1ns.innerText = `${p1name}'s score:`
+    p2ns.innerText = `${p2name}'s score:`
+  
+    document.addEventListener("keyup", e => {
+      if (e.key == 'ArrowLeft') { p1ScoreUp(limit, p1name, p2name, bestOfSets)
+      } else if (e.key == 'ArrowRight'){ p2ScoreUp(limit, p1name, p2name, bestOfSets)
+      } else if (e.key == ','){ scoreDown('player1', p1ScoreDiv)
+      } else if (e.key == '.'){ scoreDown('player2', p2ScoreDiv)
+      } else {
+        console.log('Invalid input')
+      }
+    })
+    }
+
+  let p1WinCount = 0
+  let p2WinCount = 0
+
+  function winCount(winner, p1name, p2name, bestOf) {
+    if (winner == 'player1'){
+      p1WinCount += 1
+      p1WinCountDiv.innerText = `${p1name}'s win count: ${p1WinCount}`
+      if (p1WinCount == bestOf) {
+        displayWinner(p1name, p2name)
+      }
+    } else if (winner == 'player2') {
+      p2WinCount += 1
+      p2WinCountDiv.innerText = `${p2name}'s win count: ${p2WinCount}`
+    }
+  }
+
+  function displayWinner(p1name, p2name){
+    console.log(`${p1name} beat ${p2name}`)
+  }
+
+// <=====================Helper methods======================================>
+
+    // <=======Database functions========>
 
   function postFetch(url, data){
   fetch(url, {
@@ -151,32 +230,105 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }) 
   }
 
+  function patchFetch(url, data){
+    fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+        body: JSON.stringify(data)
+      }) .then(console.log('Made it this far.'))
+    }
+
+    function getPlayerMatches(){
+      fetch(playerMatchesURL)
+      .then(res => res.json())
+      .then(data => console.log(data))
+    }
+  
+    function getPlayers() {
+      fetch(playersURL)
+      .then(res => res.json())
+      .then(data => main)
+    };
+     
+    function getMatches(){
+      fetch(matchesURL)
+      .then(res => res.json())
+      .then(data => console.log(data))
+    }
+
+ 
+    // <=======Helper methods to keepscore function========>
+
+  function p1ScoreUp(limit, p1name, p2name, bestOf){
+    clearWinnerDiv()
+    p1Score += 1
+    if (p1Score >= limit){
+      if (p1Score - p2Score >= 2) {
+      winnerDiv.innerHTML = `<u>${p1name} wins this set!</u>`
+      p1Score = 0
+      p2Score = 0
+      p2ScoreDiv.innerHTML = p2Score
+      winCount("player1", p1name, p2name, bestOf)}
+      else {
+        winnerDiv.innerText = 'You must win by 2!'
+      }
+    }
+    p1ScoreDiv.innerHTML = p1Score
+  }
+  
+  function p2ScoreUp(limit, p1name, p2name, bestOf){
+    clearWinnerDiv()
+    p2Score += 1
+    if (p2Score >= limit){
+      if (p2Score - p1Score >= 2){
+      winnerDiv.innerHTML = `<u>${p2name} wins this set!</u>`
+      p2Score = 0
+      p1Score = 0
+      p1ScoreDiv.innerHTML = p1Score
+      winCount("player2", p1name, p2name, bestOf)}
+      else {
+        winnerDiv.innerText = 'You must win by 2!'
+       }
+    } 
+    p2ScoreDiv.innerHTML = p2Score
+  }
+  
+  function scoreDown(player, playerDiv){
+    if (player == 'player1' && p1Score != 0){
+      p1Score--
+      playerDiv.innerHTML = p1Score
+    } else if ( player == 'player2' && p2Score != 0){ 
+      p2Score--
+      playerDiv.innerHTML = p2Score
+    }
+  }
+
+  
+
+    // <=======HTML show and hide function========>
+  function show(item){
+    item.style.display = 'block';
+  }
+  
+  function clearWinnerDiv() {
+    winnerDiv.innerText = ''
+  }
+
+  function clearGameInfo() {
+    gameInfo.style.display = 'none';
+
+  }
   function hide(forms){
     forms.forEach(form => {
       form.style.display = "none";
     })
   }
 
-  function getPlayerMatches(){
-    fetch(playerMatchesURL)
-    .then(res => res.json())
-    .then(data => console.log(data))
-  }
+  
 
-  function getPlayers() {
-    fetch(playersURL)
-    .then(res => res.json())
-    .then(data => main)
-  };
-   
-  function getMatches(){
-    fetch(matchesURL)
-    .then(res => res.json())
-    .then(data => console.log(data))
-  }
 
-  function show(item){
-    item.style.display = 'block';
-  }
 
 })
