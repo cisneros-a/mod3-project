@@ -5,7 +5,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let cohortSelect = document.querySelector('#existing-cohort')
   let userForms = document.querySelectorAll(".user-form");
   let greetUser = document.querySelector('.logged-in-user')
-  let username
   
 
     let p1Score = 0
@@ -33,7 +32,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let firstName = document.querySelector('#player-first-name').value.toLowerCase();
     let lastName = document.querySelector('#player-last-name').value.toLowerCase();
     let cohort = document.querySelector('#cohort').value
-    username = `${firstName}_${lastName}`
+    let username = `${firstName}_${lastName}`
     console.log(username, cohort)   
     
     if (firstName && lastName){
@@ -51,14 +50,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
       },
         body: JSON.stringify(data)
       })
-      .then(() => getPlayers())
-    //  .then(() => fetch(playersURL)
-    //  .then(res => res.json())
-    //  .then(data => goToMainMenu(username, data)))
-    //  hide(userForms)
+      .then(() => getPlayers(username))
+
 
     } else {
       console.log(`no info`)
+    }
+
+    function getPlayers(username) {
+      fetch(playersURL)
+      .then(res => res.json())
+      .then(data => goToMainMenu(username, data))
     }
 
    
@@ -101,11 +103,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
   // <==============================Main Functions=====================================>
 
 
-  function goToMainMenu(playersData){
-    console.log(playersData);
+  function goToMainMenu(username, playersData){
+   
     let logged_in = playersData.find(player => player.username == username)
     let host_id = logged_in.id
-    console.log(host_id)
+    username = logged_in.username
     let createMatchButton = document.querySelector('.create-match')
     let joinMatchButton = document.querySelector('.join-match')
     greetUser.innerHTML = `Welcome, ${username}!`
@@ -128,8 +130,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
  
-  function showExistingMatches(playersData){
-    
+  function showExistingMatches(username, playersData){
+    console.log(playersData)
     fetch(matchesURL)
     .then(res => res.json())
     .then(matchesData => matchesData.forEach(match => {
@@ -290,11 +292,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
       .then(data => console.log(data))
     }
   
-    function getPlayers() {
-      fetch(playersURL)
-      .then(res => res.json())
-      .then(data => goToMainMenu(data))
-    };
+   ;
      
     function getMatches(){
       fetch(matchesURL)
