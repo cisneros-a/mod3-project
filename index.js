@@ -5,6 +5,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let cohortSelect = document.querySelector('#existing-cohort')
   let userForms = document.querySelectorAll(".user-form");
   let greetUser = document.querySelector('.logged-in-user')
+  let username
   
 
     let p1Score = 0
@@ -15,7 +16,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let winnerDiv = document.getElementsByClassName('winner')[0]
     let p1WinCountDiv = document.querySelector('.winner-1-count')
     let p2WinCountDiv = document.querySelector('.winner-2-count')
-    let limit 
     let gameInfo = document.querySelector('#game-info')
   
 
@@ -33,7 +33,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let firstName = document.querySelector('#player-first-name').value.toLowerCase();
     let lastName = document.querySelector('#player-last-name').value.toLowerCase();
     let cohort = document.querySelector('#cohort').value
-    let username = `${firstName}_${lastName}`
+    username = `${firstName}_${lastName}`
     console.log(username, cohort)   
     
     if (firstName && lastName){
@@ -41,6 +41,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
       username: username,
       cohort: cohort
      }
+     hide(userForms)
 
      fetch(playersURL, {
       method: 'POST',
@@ -50,10 +51,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
       },
         body: JSON.stringify(data)
       })
-     .then(fetch(playersURL)
-     .then(res => res.json())
-     .then(data => goToMainMenu(username, data)))
-     hide(userForms)
+      .then(() => getPlayers())
+    //  .then(() => fetch(playersURL)
+    //  .then(res => res.json())
+    //  .then(data => goToMainMenu(username, data)))
+    //  hide(userForms)
 
     } else {
       console.log(`no info`)
@@ -99,11 +101,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
   // <==============================Main Functions=====================================>
 
 
-  function goToMainMenu(username, playersData){
+  function goToMainMenu(playersData){
     console.log(playersData);
-    
     let logged_in = playersData.find(player => player.username == username)
     let host_id = logged_in.id
+    console.log(host_id)
     let createMatchButton = document.querySelector('.create-match')
     let joinMatchButton = document.querySelector('.join-match')
     greetUser.innerHTML = `Welcome, ${username}!`
@@ -126,7 +128,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
  
-  function showExistingMatches(username, playersData){
+  function showExistingMatches(playersData){
     
     fetch(matchesURL)
     .then(res => res.json())
@@ -196,7 +198,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     bestOfSets = Math.ceil(matchData.bestOf/2)
     
     displayLimit = document.querySelector('.display-limit')
-    displayLimit.innerText = `Score ${limit} points to win!`
+    displayLimit.innerText = `Score ${matchData.score} points to win!`
     // <div class='player1-name-score'> </div>
     let p1ns = document.querySelector('.player1-name-score')
     let p2ns = document.querySelector('.player2-name-score') 
@@ -291,7 +293,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     function getPlayers() {
       fetch(playersURL)
       .then(res => res.json())
-      .then(data => main)
+      .then(data => goToMainMenu(data))
     };
      
     function getMatches(){
