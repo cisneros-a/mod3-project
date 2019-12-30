@@ -27,6 +27,7 @@ module FlatironPingpong
       allow do
           origins '*'
           resource '*', headers: :any, methods: [:get, :post, :patch]
+
       end
     end
     # Initialize configuration defaults for originally generated Rails version.

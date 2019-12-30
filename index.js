@@ -42,18 +42,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
       cohort: cohort
      }
 
-     postFetch(playersURL, data)
-
-     hide(userForms)
-     fetch(playersURL)
+     fetch(playersURL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+        body: JSON.stringify(data)
+      })
+     .then(fetch(playersURL)
      .then(res => res.json())
-     .then(data => goToMainMenu(username, data))
+     .then(data => goToMainMenu(username, data)))
+     hide(userForms)
+
     } else {
       console.log(`no info`)
     }
 
    
-    // goToMainMenu(username)
+   
      
   }) 
 
@@ -93,6 +100,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
   function goToMainMenu(username, playersData){
+    console.log(playersData);
+    
     let logged_in = playersData.find(player => player.username == username)
     let host_id = logged_in.id
     let createMatchButton = document.querySelector('.create-match')
@@ -161,32 +170,42 @@ window.addEventListener('DOMContentLoaded', (event) => {
            buttons = document.querySelectorAll('button')
            hide(buttons)
            matchList.style.display = 'none'
+
+           let matchData = {
+             score: 11,
+             hostUsername: hostName,
+             loggedInUsername: logged_in.username,
+             bestOf: 3,
+             hostId: match.host_id,
+             loggedInId: logged_in.id,
+             matchId: match.id
+           }
            
            greetUser.innerHTML = `You have joined ${hostName}'s match!`
-           keepscore(11, hostName, logged_in.username, 3)
+           keepscore(matchData)
         }) 
       } 
     }))    
   }
 
-  function keepscore(limit, p1name, p2name, bestOf) {
-    console.log('--------------------------------------------------------')
+  function keepscore(matchData) {
+    console.log(matchData.loggedInUsername)
     greetUser.innerHTML = ``
     gameInfo.style.display = 'block';
     document.querySelector('.user-form').style.display = "none"
-    bestOfSets = Math.ceil(bestOf/2)
+    bestOfSets = Math.ceil(matchData.bestOf/2)
     
     displayLimit = document.querySelector('.display-limit')
     displayLimit.innerText = `Score ${limit} points to win!`
     // <div class='player1-name-score'> </div>
     let p1ns = document.querySelector('.player1-name-score')
     let p2ns = document.querySelector('.player2-name-score') 
-    p1ns.innerText = `${p1name}'s score:`
-    p2ns.innerText = `${p2name}'s score:`
+    p1ns.innerText = `${matchData.hostUsername}'s score:`
+    p2ns.innerText = `${matchData.loggedInUsername}'s score:`
   
     document.addEventListener("keyup", e => {
-      if (e.key == 'ArrowLeft') { p1ScoreUp(limit, p1name, p2name, bestOfSets)
-      } else if (e.key == 'ArrowRight'){ p2ScoreUp(limit, p1name, p2name, bestOfSets)
+      if (e.key == 'ArrowLeft') { p1ScoreUp(matchData, bestOfSets)
+      } else if (e.key == 'ArrowRight'){ p2ScoreUp(matchData, bestOfSets)
       } else if (e.key == ','){ scoreDown('player1', p1ScoreDiv)
       } else if (e.key == '.'){ scoreDown('player2', p2ScoreDiv)
       } else {
@@ -198,21 +217,43 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let p1WinCount = 0
   let p2WinCount = 0
 
-  function winCount(winner, p1name, p2name, bestOf) {
+  function winCount(winner, matchData, bestOf) {
     if (winner == 'player1'){
       p1WinCount += 1
-      p1WinCountDiv.innerText = `${p1name}'s win count: ${p1WinCount}`
+      p1WinCountDiv.innerText = `${matchData.hostName}'s win count: ${p1WinCount}`
       if (p1WinCount == bestOf) {
-        displayWinner(p1name, p2name)
+        displayWinner('player1', matchData)
       }
     } else if (winner == 'player2') {
       p2WinCount += 1
-      p2WinCountDiv.innerText = `${p2name}'s win count: ${p2WinCount}`
+      p2WinCountDiv.innerText = `${matchData.loggedInUsername}'s win count: ${p2WinCount}`
+      if (p2WinCount == bestOf) {
+        displayWinner('player2', matchData)
+      }
     }
   }
 
-  function displayWinner(p1name, p2name){
-    console.log(`${p1name} beat ${p2name}`)
+  function displayWinner(winner, matchData){
+  
+    let updatedMatchURL = `http://localhost:3000/matches/${matchData.matchId}`
+    if (winner == 'player1'){
+      let data = {
+        winner_id: matchData.hostId,
+        loser_id: matchData.loggedInId,
+        host_id: null
+      }
+      patchFetch(updatedMatchURL, data)
+
+    } else {
+      let data = {
+        winner_id: matchData.loggedInId,
+        loser_id: matchData.hostId,
+        host_id: null
+      }
+      patchFetch(updatedMatchURL, data)
+
+    }
+    
   }
 
 // <=====================Helper methods======================================>
@@ -238,7 +279,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         'Accept': 'application/json'
       },
         body: JSON.stringify(data)
-      }) .then(console.log('Made it this far.'))
+      })
     }
 
     function getPlayerMatches(){
@@ -262,16 +303,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
  
     // <=======Helper methods to keepscore function========>
 
-  function p1ScoreUp(limit, p1name, p2name, bestOf){
+  function p1ScoreUp(matchData, bestOf){
     clearWinnerDiv()
     p1Score += 1
-    if (p1Score >= limit){
+    if (p1Score >= matchData.score){
       if (p1Score - p2Score >= 2) {
-      winnerDiv.innerHTML = `<u>${p1name} wins this set!</u>`
+      winnerDiv.innerHTML = `<u>${matchData.hostUsername} wins this set!</u>`
       p1Score = 0
       p2Score = 0
       p2ScoreDiv.innerHTML = p2Score
-      winCount("player1", p1name, p2name, bestOf)}
+      winCount("player1", matchData, bestOf)}
       else {
         winnerDiv.innerText = 'You must win by 2!'
       }
@@ -279,16 +320,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
     p1ScoreDiv.innerHTML = p1Score
   }
   
-  function p2ScoreUp(limit, p1name, p2name, bestOf){
+  function p2ScoreUp(matchData, bestOf){
     clearWinnerDiv()
     p2Score += 1
-    if (p2Score >= limit){
+    if (p2Score >= matchData.score){
       if (p2Score - p1Score >= 2){
-      winnerDiv.innerHTML = `<u>${p2name} wins this set!</u>`
+      winnerDiv.innerHTML = `<u>${matchData.loggedInUsername} wins this set!</u>`
       p2Score = 0
       p1Score = 0
       p1ScoreDiv.innerHTML = p1Score
-      winCount("player2", p1name, p2name, bestOf)}
+      winCount("player2", matchData, bestOf)}
       else {
         winnerDiv.innerText = 'You must win by 2!'
        }
