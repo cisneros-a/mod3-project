@@ -5,35 +5,30 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let cohortSelect = document.querySelector('#existing-cohort')
   let userForms = document.querySelectorAll(".user-form");
   let greetUser = document.querySelector('.logged-in-user')
-  
-
-    let p1Score = 0
-    let p2Score = 0
-    
-    let p1ScoreDiv = document.getElementsByClassName('player-1-score')[0]
-    let p2ScoreDiv = document.getElementsByClassName('player-2-score')[0]
-    let winnerDiv = document.getElementsByClassName('winner')[0]
-    let p1WinCountDiv = document.querySelector('.winner-1-count')
-    let p2WinCountDiv = document.querySelector('.winner-2-count')
-    let gameInfo = document.querySelector('#game-info')
-  
-
+  let restartMatchButton = document.querySelector('.restart-match')
+  let p1WinCount = 0
+  let p2WinCount = 0
+  let p1Score = 0
+  let p2Score = 0
+  let p1ScoreDiv = document.getElementsByClassName('player-1-score')[0]
+  let p2ScoreDiv = document.getElementsByClassName('player-2-score')[0]
+  let winnerDiv = document.getElementsByClassName('winner')[0]
+  let p1WinCountDiv = document.querySelector('.winner-1-count')
+  let p2WinCountDiv = document.querySelector('.winner-2-count')
+  let gameInfo = document.querySelector('#game-info')
   let playerMatchesURL = 'http://localhost:3000/player_matches'
   let playersURL = 'http://localhost:3000/players'
   let matchesURL = 'http://localhost:3000/matches'
-  
 
   clearGameInfo()
   
   
   newSubmitButton.addEventListener('click', e => {
     e.preventDefault();
-    console.log('button clicked')
     let firstName = document.querySelector('#player-first-name').value.toLowerCase();
     let lastName = document.querySelector('#player-last-name').value.toLowerCase();
     let cohort = document.querySelector('#cohort').value
     let username = `${firstName}_${lastName}`
-    console.log(username, cohort)   
     
     if (firstName && lastName){
     let data = {
@@ -95,7 +90,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
         option.innerText = player.username
         studentDropdown.appendChild(option)
         i ++
-        console.log(option)
       }
     }));
   }
@@ -110,9 +104,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
     username = logged_in.username
     let createMatchButton = document.querySelector('.create-match')
     let joinMatchButton = document.querySelector('.join-match')
+    let createTournamentButton = document.querySelector('.create-tournament')
+
     greetUser.innerHTML = `Welcome, ${username}!`
     show(createMatchButton)
     show(joinMatchButton)
+    show(createTournamentButton)
     createMatchButton.addEventListener('click', e => {
       let data = {winner_id: null,
         loser_id: null,
@@ -126,12 +123,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
     joinMatchButton.addEventListener('click', e =>{
       showExistingMatches(username, playersData)
     })
+
   }
 
+  
 
+  
+
+  
  
   function showExistingMatches(username, playersData){
-    console.log(playersData)
     fetch(matchesURL)
     .then(res => res.json())
     .then(matchesData => matchesData.forEach(match => {
@@ -146,10 +147,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
         button.setAttribute('id', `${match.host_id}`)
         matchList.appendChild(matchLi) 
         matchList.appendChild(button)
-        // console.log(logged_in.id)
         
         button.addEventListener('click', e => {
-          // console.log(match.host_id)
           let data = {
             player_1_id: match.host_id,
             player_2_id: logged_in.id,
@@ -193,7 +192,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
   }
 
   function keepscore(matchData) {
-    console.log(matchData.loggedInUsername)
+    hideSingle(restartMatchButton)
+    console.log(matchData)
     greetUser.innerHTML = ``
     gameInfo.style.display = 'block';
     document.querySelector('.user-form').style.display = "none"
@@ -218,8 +218,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     })
     }
 
-  let p1WinCount = 0
-  let p2WinCount = 0
+ 
 
   function winCount(winner, matchData, bestOf) {
     if (winner == 'player1'){
@@ -247,7 +246,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         host_id: null
       }
       patchFetch(updatedMatchURL, data)
-
+      displayVsRecord('player1', matchData)
     } else {
       let data = {
         winner_id: matchData.loggedInId,
@@ -255,10 +254,64 @@ window.addEventListener('DOMContentLoaded', (event) => {
         host_id: null
       }
       patchFetch(updatedMatchURL, data)
-
+      displayVsRecord('player2', matchData)
     }
     
   }
+
+  function displayVsRecord(winner, matchData) {
+    clearGameInfo()
+    displayLimit = document.querySelector('.display-limit')
+    if (winner == 'player1'){
+    displayLimit.innerHTML = `<h3>${matchData.hostUsername} won the match!</h3>`
+      } else {
+      displayLimit.innerHTML = `<h3>${matchData.loggedInUsername} won the match!</h3>`
+
+  }
+} 
+//   show(restartMatchButton)
+//   restartMatchButton.addEventListener('click', e => {
+//     data = {
+//       winner_id: null,
+//       loser_id: null,
+//       host_id: null
+//     }
+//     fetch(matchesURL, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Accept': 'application/json'
+//       },
+//         body: JSON.stringify(data)
+//       })
+//       .then(() => startNewGame(matchData))
+      
+//   })
+// }
+
+// function startNewGame(matchData){
+//   p1WinCount = 0
+//   p2WinCount = 0
+//   p1Score = 0
+//   p2Score = 0
+//   fetch(matchesURL)
+//   .then(res => res.json())
+//   .then(data => {
+//     console.log(data[data.length-1].id)
+//     playerMatchData = {
+//       player_1_id: matchData.hostId,
+//       player_2_id: matchData.loggedInId,
+//       match_id: data[data.length-1].id
+//     } 
+//     postFetch(playerMatchesURL, playerMatchData)
+
+//    matchData.matchId = data[data.length-1].id
+//      keepscore(matchData)
+//   })
+// }
+
+    
+  
 
 // <=====================Helper methods======================================>
 
@@ -272,7 +325,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
       'Accept': 'application/json'
     },
       body: JSON.stringify(data)
-    }) 
+    })
   }
 
   function patchFetch(url, data){
@@ -292,18 +345,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
       .then(data => console.log(data))
     }
   
-   ;
-     
     function getMatches(){
       fetch(matchesURL)
       .then(res => res.json())
-      .then(data => console.log(data))
-    }
+      .then(data => data)
+    };
+     
+   
 
  
     // <=======Helper methods to keepscore function========>
 
   function p1ScoreUp(matchData, bestOf){
+    console.log(p1Score)
     clearWinnerDiv()
     p1Score += 1
     if (p1Score >= matchData.score){
@@ -317,6 +371,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         winnerDiv.innerText = 'You must win by 2!'
       }
     }
+    console.log(p1Score)
     p1ScoreDiv.innerHTML = p1Score
   }
   
@@ -352,6 +407,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // <=======HTML show and hide function========>
   function show(item){
     item.style.display = 'block';
+  }
+
+  function hideSingle(item){
+    item.style.display = 'none';
   }
   
   function clearWinnerDiv() {
