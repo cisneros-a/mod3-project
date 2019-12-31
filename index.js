@@ -224,7 +224,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   function winCount(winner, matchData, bestOf) {
     if (winner == 'player1'){
       p1WinCount += 1
-      p1WinCountDiv.innerText = `${matchData.hostName}'s win count: ${p1WinCount}`
+      p1WinCountDiv.innerText = `${matchData.hostUsername}'s win count: ${p1WinCount}`
       if (p1WinCount == bestOf) {
         displayWinner('player1', matchData)
       }
