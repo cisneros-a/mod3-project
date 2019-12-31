@@ -3,6 +3,11 @@ body {
 }
 
 
+.restart-match{
+display: flex;
+display: none;
+padding: 30px;
+}
 .create-match {
   display: flex;
   display: none; /* Hidden by default */
@@ -18,3 +23,12 @@ body {
   z-index: 1; 
   padding: 30px;
 }
+
+.create-tournament {
+  display: flex;
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; 
+  padding: 30px;
+}
+
