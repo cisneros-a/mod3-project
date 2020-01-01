@@ -19,6 +19,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let playerMatchesURL = 'http://localhost:3000/player_matches'
   let playersURL = 'http://localhost:3000/players'
   let matchesURL = 'http://localhost:3000/matches'
+  let matchData 
 
   clearGameInfo()
   
@@ -98,18 +99,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
   function goToMainMenu(username, playersData){
+   console.log('goToMainMenu');
    
     let logged_in = playersData.find(player => player.username == username)
     let host_id = logged_in.id
     username = logged_in.username
     let createMatchButton = document.querySelector('.create-match')
     let joinMatchButton = document.querySelector('.join-match')
-    let createTournamentButton = document.querySelector('.create-tournament')
 
     greetUser.innerHTML = `Welcome, ${username}!`
     show(createMatchButton)
     show(joinMatchButton)
-    show(createTournamentButton)
     createMatchButton.addEventListener('click', e => {
       let data = {winner_id: null,
         loser_id: null,
@@ -121,7 +121,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     })
     joinMatchButton.addEventListener('click', e =>{
-      showExistingMatches(username, playersData)
+      showExistingMatches(username, playersData, keepscore)
     })
 
   }
@@ -132,7 +132,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
   
  
-  function showExistingMatches(username, playersData){
+  function showExistingMatches(username, playersData, callback){
     fetch(matchesURL)
     .then(res => res.json())
     .then(matchesData => matchesData.forEach(match => {
@@ -174,7 +174,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
            hide(buttons)
            matchList.style.display = 'none'
 
-           let matchData = {
+           matchData = {
              score: 11,
              hostUsername: hostName,
              loggedInUsername: logged_in.username,
@@ -185,38 +185,48 @@ window.addEventListener('DOMContentLoaded', (event) => {
            }
            
            greetUser.innerHTML = `You have joined ${hostName}'s match!`
-           keepscore(matchData)
+           console.log('line 188')
+           callback()
         }) 
       } 
     }))    
   }
 
-  function keepscore(matchData) {
+  let keepscore = () => {
+    
     hideSingle(restartMatchButton)
-    console.log(matchData)
+    console.log('line 196')
     greetUser.innerHTML = ``
     gameInfo.style.display = 'block';
     document.querySelector('.user-form').style.display = "none"
-    bestOfSets = Math.ceil(matchData.bestOf/2)
+    let bestOfSets = Math.ceil(matchData.bestOf/2)
     
-    displayLimit = document.querySelector('.display-limit')
+    let displayLimit = document.querySelector('.display-limit')
     displayLimit.innerText = `Score ${matchData.score} points to win!`
     // <div class='player1-name-score'> </div>
     let p1ns = document.querySelector('.player1-name-score')
     let p2ns = document.querySelector('.player2-name-score') 
     p1ns.innerText = `${matchData.hostUsername}'s score:`
     p2ns.innerText = `${matchData.loggedInUsername}'s score:`
-  
-    document.addEventListener("keyup", e => {
-      if (e.key == 'ArrowLeft') { p1ScoreUp(matchData, bestOfSets)
-      } else if (e.key == 'ArrowRight'){ p2ScoreUp(matchData, bestOfSets)
-      } else if (e.key == ','){ scoreDown('player1', p1ScoreDiv)
-      } else if (e.key == '.'){ scoreDown('player2', p2ScoreDiv)
+    if (!matchData.rematch){
+    window.addEventListener("keyup", e => {
+      if (e.key === 'ArrowLeft') { 
+        p1ScoreUp(matchData, bestOfSets)
+      } else if (e.key === 'ArrowRight') { 
+        p2ScoreUp(matchData, bestOfSets)
+      } else if (e.key === ',') { 
+        scoreDown('player1', p1ScoreDiv)
+      } else if (e.key === '.') { 
+        scoreDown('player2', p2ScoreDiv)
       } else {
         console.log('Invalid input')
       }
-    })
-    }
+  
+    })}
+}
+
+
+
 
  
 
@@ -259,56 +269,64 @@ window.addEventListener('DOMContentLoaded', (event) => {
     
   }
 
-  function displayVsRecord(winner, matchData) {
+function displayVsRecord(winner, matchData) {
     clearGameInfo()
-    displayLimit = document.querySelector('.display-limit')
+    show(restartMatchButton)
+    let displayLimit = document.querySelector('.display-limit')
     if (winner == 'player1'){
-    displayLimit.innerHTML = `<h3>${matchData.hostUsername} won the match!</h3>`
-      } else {
+      displayLimit.innerHTML = `<h3>${matchData.hostUsername} won the match!</h3>`
+    } else if (winner == 'player2') {
       displayLimit.innerHTML = `<h3>${matchData.loggedInUsername} won the match!</h3>`
 
+    }
+      console.log('line 273')
+      if (!matchData.rematch){
+    restartMatchButton.addEventListener('click', e => {
+      console.log(e);
+    
+      hideSingle(restartMatchButton)
+      let data = {
+        winner_id: null,
+        loser_id: null,
+        host_id: null
+      }
+      fetch(matchesURL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+          body: JSON.stringify(data)
+        })
+        .then(() => { 
+          startNewGame(matchData, keepscore)
+        })
+      
+    })
   }
 } 
-//   show(restartMatchButton)
-//   restartMatchButton.addEventListener('click', e => {
-//     data = {
-//       winner_id: null,
-//       loser_id: null,
-//       host_id: null
-//     }
-//     fetch(matchesURL, {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         'Accept': 'application/json'
-//       },
-//         body: JSON.stringify(data)
-//       })
-//       .then(() => startNewGame(matchData))
-      
-//   })
-// }
+ 
 
-// function startNewGame(matchData){
-//   p1WinCount = 0
-//   p2WinCount = 0
-//   p1Score = 0
-//   p2Score = 0
-//   fetch(matchesURL)
-//   .then(res => res.json())
-//   .then(data => {
-//     console.log(data[data.length-1].id)
-//     playerMatchData = {
-//       player_1_id: matchData.hostId,
-//       player_2_id: matchData.loggedInId,
-//       match_id: data[data.length-1].id
-//     } 
-//     postFetch(playerMatchesURL, playerMatchData)
+function startNewGame(matchData, callback){
+  p1WinCount = 0
+  p2WinCount = 0
+ 
+  fetch(matchesURL)
+  .then(res => res.json())
+  .then(data => {
+    playerMatchData = {
+      player_1_id: matchData.hostId,
+      player_2_id: matchData.loggedInId,
+      match_id: data[data.length-1].id
+    } 
+    postFetch(playerMatchesURL, playerMatchData)
 
-//    matchData.matchId = data[data.length-1].id
-//      keepscore(matchData)
-//   })
-// }
+    matchData.rematch = true
+    matchData.matchId = data[data.length-1].id
+    console.log('line 311')
+     callback()
+  })
+}
 
     
   
@@ -318,6 +336,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // <=======Database functions========>
 
   function postFetch(url, data){
+    console.log('post fetch line 324')
   fetch(url, {
     method: 'POST',
     headers: {
@@ -378,6 +397,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   function p2ScoreUp(matchData, bestOf){
     clearWinnerDiv()
     p2Score += 1
+    console.log(p2Score)
     if (p2Score >= matchData.score){
       if (p2Score - p1Score >= 2){
       winnerDiv.innerHTML = `<u>${matchData.loggedInUsername} wins this set!</u>`
