@@ -20,6 +20,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let playersURL = 'http://localhost:3000/players'
   let matchesURL = 'http://localhost:3000/matches'
   let matchData
+  let userTotalMatchesDiv = document.querySelector('.stats-total-matches')
+  let userWonMatchesDiv = document.querySelector('.stats-won-matches')
+  let userLostMatchesDiv = document.querySelector('.stats-lost-matches')
 
   // clearGameInfo()
 
@@ -67,7 +70,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
     function getPlayers(username) {
       fetch(playersURL)
         .then(res => res.json())
-        .then(data => goToMainMenu(username, data))
+        .then(data => {
+          runEvents(username, data)
+        })
     }
 
 
@@ -83,9 +88,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
     hide(userForms)
     fetch(playersURL)
       .then(res => res.json())
-      .then(data => goToMainMenu(username, data))
+      .then(data => {
+        runEvents(username, data)
+      })
 
   })
+
+  function runEvents(username, data){ 
+    populateUserStats(username, data)
+    goToMainMenu(username, data)
+  }
 
   cohortSelect.onchange = function () {
     let cohortName = document.querySelector('#existing-cohort').value
@@ -110,6 +122,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
   function goToMainMenu(username, playersData) {
+    console.log(playersData)
     console.log('gtmm 113')
     let displayUsername = document.querySelector('.display-username')
     displayUsername.innerText = username
@@ -300,6 +313,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
     
 
 
+  }
+
+  function populateUserStats(username, playersData){
+    console.log(playersData)
+    let loggedInId= playersData.find(player => player.username == username).id
+    fetch(matchesURL)
+    .then(res => res.json())
+    .then(allMatches => {
+      let userWonMatches = allMatches.filter(function(match){
+        return match.winner_id === loggedInId
+      })
+      let userLostMatches = allMatches.filter(function(match){
+        return match.loser_id === loggedInId
+      })
+      let userTotalMatches = userWonMatches.concat(userLostMatches)
+        userWonMatchesDiv.innerText = userWonMatches.length
+        userLostMatchesDiv.innerText = userLostMatches.length
+        userTotalMatchesDiv.innerText = userTotalMatches.length
+    })
   }
 
   function afterMatchScreen(winner, matchData) {
