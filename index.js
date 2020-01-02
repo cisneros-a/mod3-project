@@ -4,6 +4,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let newSubmitButton = document.querySelector('#submit-new')
   let cohortSelect = document.querySelector('#existing-cohort')
   let userForms = document.querySelectorAll(".user-form");
+  let createMatchButton = document.querySelector('.create-match')
+  let joinMatchButton = document.querySelector('.join-match')
   // let greetUser = document.querySelector('.logged-in-user')
   let restartMatchButton = document.querySelector('.restart-match')
   let p1WinCount = 0
@@ -22,6 +24,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let matchData
   let statsContainer = document.querySelector('#stats__container')
   let currentMatch = document.querySelector('#current_match')
+  let joinCreateContainer = document.querySelector('#join-create_match')
   let userTotalMatchesDiv = document.querySelector('.stats-total-matches')
   let userWonMatchesDiv = document.querySelector('.stats-won-matches')
   let userLostMatchesDiv = document.querySelector('.stats-lost-matches')
@@ -130,8 +133,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let logged_in = playersData.find(player => player.username == username)
     let host_id = logged_in.id
     username = logged_in.username
-    let createMatchButton = document.querySelector('.create-match')
-    let joinMatchButton = document.querySelector('.join-match')
+    
 
     
     createMatchButton.addEventListener('click', e => {
@@ -150,7 +152,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
     })
 
     statsContainer.classList.add('show-view')
-
   }
 
 
@@ -197,8 +198,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
               body: JSON.stringify(data)
             }).then(patchFetch(updatedMatchURL, data2))
 
-            buttons = document.querySelectorAll('button')
-            hide(buttons)
+            // buttons = document.querySelectorAll('button')
+            // hide(buttons)
             matchList.style.display = 'none'
 
             matchData = {
@@ -219,6 +220,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   }
 
   let keepscore = () => {
+    joinCreateContainer.classList.remove('show-view') 
     currentMatch.classList.add('show-view')
     p1WinCount = 0
     p2WinCount = 0
@@ -339,7 +341,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
   function afterMatchScreen(winner, matchData) {
     let vsRecord = document.querySelector('.vs-record')
     clearGameInfo()
-    show(restartMatchButton)
+    showSingle(restartMatchButton)
+    
     fetch(matchesURL)
       .then(res => res.json())
       .then(data => {
@@ -500,7 +503,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
   // <=======HTML show and hide function========>
-  function show(item) {
+  function showSingle(item) {
     item.style.display = 'block';
   }
 
@@ -517,9 +520,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
   }
 
-  function hide(forms) {
-    forms.forEach(form => {
-      form.style.display = "none";
+  function hide(items) {
+    items.forEach(item => {
+      item.style.display = "none";
+    })
+  }
+
+  function show(items) {
+    items.forEach(item => {
+      item.style.display = "block";
     })
   }
 
