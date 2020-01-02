@@ -5,13 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Flatiron Ping-Pong</title>
+  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css" />
   <link rel="stylesheet" href="index.css">
+  <script src="https://kit.fontawesome.com/7e75b8cc69.js" crossorigin="anonymous"></script>
 </head>
 <body>
   <div class="container-fluid">
     <div class="row">
-      <aside id="user-profile__container" class="col-md-3">
-        <h2>Username</h2>
+      <aside id="user-profile__container" class="col-md-3 col-lg-2">
+        <h2 class='display-username'>Username</h2>
         <img src="https://placehold.it/150" alt="placeholder image for user">
         <ul id="nav-links__container">
           <li class="nav-link" data-js="stats__container">
@@ -33,7 +35,7 @@
         </ul>
       </aside>
       <!--  View Body  -->
-      <main id="main-view" class="col-md-9">
+      <main id="main-view" class="col-md-9 col-lg-10">
         <div id="stats__container" class="viewport container">
           <div class="row">
             <div class="col-md-4">
@@ -83,6 +85,9 @@
         </div>
         <div id="current_match" class="viewport container">
           <h2>Current Match</h2>
+          <div class='vs-record'> </div>
+
+          <div class='display-limit'> </div>
           <div id='game-info'>
     <div class='winner'> </div><u> </u> <br>
     <div class='winner-1-count'> </div>
@@ -94,6 +99,7 @@
   </div>
   <button class="btn btn-success restart-match">Play again!</button>
         </div>
+
         <div id="join-create_match" class="viewport container">
           <h2>Join/Create Match</h2>
           <button class="btn btn-success create-match">Create Match</button><br><br><br><br><br><br>
@@ -101,6 +107,8 @@
 
   <h5></h5>
   <ul class='matches-list'></ul class=''>
+
+
         </div>
         <div id="sign-in-up_view" class="viewport container">
           <!--      Put Code Below Here      -->
