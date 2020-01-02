@@ -13,29 +13,41 @@
   <div class="container-fluid">
     <div class="row">
       <aside id="user-profile__container" class="col-md-3 col-lg-2">
-        <h2 class='display-username'>Username</h2>
-        <img src="https://placehold.it/150" alt="placeholder image for user">
+        <h2 class='display-username'>Flatiron Ping-Pong</h2>
+        <img src="http://www.wcyt.org/wp-content/uploads/2012/09/fancy-cat1.jpg" alt="placeholder image for user">
         <ul id="nav-links__container">
-          <li class="nav-link" data-js="stats__container">
-            <i class="fas fa-user "></i>
-            Your Stats
-          </li>
-          <li class="nav-link" data-js="current_match">
-            <i class="fas fa-table-tennis"></i>
-            Current Match
-          </li>
-          <li class="nav-link" data-js="join-create_match">
-            <i class="fas fa-user-friends"></i>
-            Join/Create Match
+          <li class="nav-link" data-js="home__view">
+            <i class="fas fa-home"></i>
+            Home
           </li>
           <li class="nav-link" data-js="sign-in-up_view">
             <i class="fas fa-user-plus"></i>
             Sign In/Sign Up
           </li>
+          <li class="nav-link" data-js="join-create_match">
+            <i class="fas fa-user-friends"></i>
+            Join/Create Match
+          </li>
+          <li class="nav-link" data-js="current_match">
+            <i class="fas fa-table-tennis"></i>
+            Current Match
+          </li>
+          <li class="nav-link" data-js="stats__container">
+            <i class="fas fa-user "></i>
+            My Stats
+          </li>
         </ul>
       </aside>
       <!--  View Body  -->
       <main id="main-view" class="col-md-9 col-lg-10">
+        <div id="home__view" class='viewport container-fluid show-view'>
+          <h2>Welcome To Flatiron Ping-Pong!</h2>
+          <!-- <div style="width:100%;height:0;padding-bottom:75%;position:relative;">
+            <iframe src="https://giphy.com/embed/ECwTCTrHPVqKI" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed">
+            </iframe>
+          </div> -->
+          <img src="https://media.giphy.com/media/ECwTCTrHPVqKI/giphy.gif" alt="">
+        </div>
         <div id="stats__container" class="viewport container">
           <div class="row">
             <div class="col-md-4">
@@ -59,7 +71,7 @@
           </div>
           <div class="row">
             <div class="col-12">
-              __Recharts_here__
+              <h3>Stats Chart Coming Soon</h3>
             </div>
           </div>
           <div class="row">
