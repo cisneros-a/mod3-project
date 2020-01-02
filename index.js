@@ -220,6 +220,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
   }
 
   let keepscore = () => {
+   
+
     joinCreateContainer.classList.remove('show-view') 
     currentMatch.classList.add('show-view')
     p1WinCount = 0
@@ -268,12 +270,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
       p1WinCount += 1
       p1WinCountDiv.innerText = `${matchData.hostUsername}'s win count: ${p1WinCount}`
       if (p1WinCount == bestOf) {
+
+        userTotalMatchesDiv.innerText = (parseInt(userTotalMatchesDiv.innerText) + 1)
+        userLostMatchesDiv.innerText = (parseInt(userLostMatchesDiv.innerText) + 1)
         displayWinner('player1', matchData)
       }
     } else if (winner == 'player2') {
       p2WinCount += 1
       p2WinCountDiv.innerText = `${matchData.loggedInUsername}'s win count: ${p2WinCount}`
       if (p2WinCount == bestOf) {
+        userTotalMatchesDiv.innerText = (parseInt(userTotalMatchesDiv.innerText) + 1)
+        userWonMatchesDiv.innerText = (parseInt(userWonMatchesDiv.innerText) + 1)
+
         displayWinner('player2', matchData)
       }
     }
