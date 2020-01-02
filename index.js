@@ -20,10 +20,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let playersURL = 'http://localhost:3000/players'
   let matchesURL = 'http://localhost:3000/matches'
   let matchData
+  let statsContainer = document.querySelector('#stats__container')
+  let currentMatch = document.querySelector('#current_match')
   let userTotalMatchesDiv = document.querySelector('.stats-total-matches')
   let userWonMatchesDiv = document.querySelector('.stats-won-matches')
   let userLostMatchesDiv = document.querySelector('.stats-lost-matches')
-
   // clearGameInfo()
 
   const navLinks = document.querySelectorAll('.nav-link')
@@ -132,9 +133,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let createMatchButton = document.querySelector('.create-match')
     let joinMatchButton = document.querySelector('.join-match')
 
-    // greetUser.innerHTML = `Welcome, ${username}!`
-    // actually, you can't right now. Not by classname
-    // right. 
+    
     createMatchButton.addEventListener('click', e => {
       let data = {
         winner_id: null,
@@ -149,6 +148,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
     joinMatchButton.addEventListener('click', e => {
       showExistingMatches(username, playersData, keepscore)
     })
+
+    statsContainer.classList.add('show-view')
 
   }
 
@@ -209,7 +210,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
               loggedInId: logged_in.id,
               matchId: match.id
             }
-
+            // currentMatch.classList.add('show-view')
             // greetUser.innerHTML = `You have joined ${hostName}'s match!`
             callback()
           })
@@ -218,6 +219,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   }
 
   let keepscore = () => {
+    currentMatch.classList.add('show-view')
     p1WinCount = 0
     p2WinCount = 0
     p1WinCountDiv.innerText = `${matchData.hostUsername}'s win count: ${p1WinCount}`
