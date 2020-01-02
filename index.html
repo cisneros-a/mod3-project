@@ -1,22 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Flatiron Ping-Pong</title>
-
-  <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css" />
-  <link rel="stylesheet" href="index.css" />
-
-
+  <link rel="stylesheet" href="index.css">
 </head>
-
 <body>
+  <div class="container-fluid">
+    <div class="row">
+      <aside id="user-profile__container" class="col-md-3">
+        <h2>Username</h2>
+        <img src="https://placehold.it/150" alt="placeholder image for user">
+        <ul id="nav-links__container">
+          <li class="nav-link" data-js="stats__container">
+            <i class="fas fa-user"></i>
+            User Stats
+          </li>
+          <li class="nav-link" data-js="current_match">
+            <i class="fas fa-table-tennis"></i>
+            Current Match
+          </li>
+          <li class="nav-link" data-js="join-create_match">
+            <i class="fas fa-user-friends"></i>
+            Join/Create Match
+          </li>
+          <li class="nav-link" data-js="sign-in-up_view">
+            <i class="fas fa-user-plus"></i>
+            Sign In/Sign Up
+          </li>
+        </ul>
+      </aside>
+      <!--  View Body  -->
+      <main id="main-view" class="col-md-9">
+        <div id="stats__container" class="viewport container">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="stats__card text-center">
+                <h3>Total Games Played</h3>
+                <h2>0</h2>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="stats__card text-center">
+                <h3>Games Won</h3>
+                <h2>0</h2>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="stats__card text-center">
+                <h3>Games Lost</h3>
+                <h2>0</h2>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              __Recharts_here__
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="stats__card text-center">
+                <h3>Total Tourneys Played</h3>
+                <h2>0</h2>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="stats__card text-center">
+                <h3>Tourneys Won</h3>
+                <h2>0</h2>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="stats__card text-center">
+                <h3>Tourneys Lost</h3>
+                <h2>0</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="current_match" class="viewport container">
+          <h2>Current Match</h2>
+          <div id='game-info'>
+    <div class='winner'> </div><u> </u> <br>
+    <div class='winner-1-count'> </div>
+    <div class='winner-2-count'> </div><br>
+    <div class='player1-name-score'> </div>
+    <div class="player-1-score">0</div><br>
+    <div class='player2-name-score'> </div>
+    <div class="player-2-score">0</div>
+  </div>
+  <button class="btn btn-success restart-match">Play again!</button>
+        </div>
+        <div id="join-create_match" class="viewport container">
+          <h2>Join/Create Match</h2>
+          <button class="btn btn-success create-match">Create Match</button><br><br><br><br><br><br>
+  <button class="btn btn-info join-match">Join Match</button><br><br><br><br><br><br>
 
-  <h3 class='logged-in-user'> </h3>
-  <form class='user-form'>
+  <h5></h5>
+  <ul class='matches-list'></ul class=''>
+        </div>
+        <div id="sign-in-up_view" class="viewport container">
+          <!--      Put Code Below Here      -->
+          <form class='user-form'>
     <fieldset>
       <legend>Sign up!</legend>
       <div class="form-group">
@@ -42,9 +130,8 @@
       <button type="submit" id="submit-new" class="btn btn-primary">Submit</button>
     </fieldset>
   </form>
-
-
-  <form class='user-form'>
+          
+          <form class='user-form'>
     <fieldset>
       <legend>Sign in!</legend>
       <div class="form-group">
@@ -67,28 +154,12 @@
       <button type="submit" id="submit-existing" class="btn btn-primary">Submit</button>
     </fieldset>
   </form>
-
-  <p class='display-limit'></p>
-  <h5 class = 'vs-record'></h5>
-
-  <button class="btn btn-success create-match">Create Match</button><br><br><br><br><br><br>
-  <button class="btn btn-info join-match">Join Match</button><br><br><br><br><br><br>
-
-  <h5></h5>
-  <ul class='matches-list'></ul class=''>
-
-  <div id='game-info'>
-    <div class='winner'> </div><u> </u> <br>
-    <div class='winner-1-count'> </div>
-    <div class='winner-2-count'> </div><br>
-    <div class='player1-name-score'> </div>
-    <div class="player-1-score">0</div><br>
-    <div class='player2-name-score'> </div>
-    <div class="player-2-score">0</div>
+          
+          <!--      Put Code Above Here      -->
+        </div>
+      </main>
+    </div>
   </div>
-  <button class="btn btn-success restart-match">Play again!</button>
-
   <script type="text/javascript" src="./index.js"></script>
 </body>
-
 </html>
