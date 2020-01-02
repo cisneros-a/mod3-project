@@ -4,7 +4,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let newSubmitButton = document.querySelector('#submit-new')
   let cohortSelect = document.querySelector('#existing-cohort')
   let userForms = document.querySelectorAll(".user-form");
-  let greetUser = document.querySelector('.logged-in-user')
+  // let greetUser = document.querySelector('.logged-in-user')
   let restartMatchButton = document.querySelector('.restart-match')
   let p1WinCount = 0
   let p2WinCount = 0
@@ -21,7 +21,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let matchesURL = 'http://localhost:3000/matches'
   let matchData
 
-  clearGameInfo()
+  // clearGameInfo()
+
+  const navLinks = document.querySelectorAll('.nav-link')
+
+  navLinks.forEach((navlink) => {
+    navlink.addEventListener('click', (e) => {
+      navLinks.forEach(link => {
+       document.getElementById(link.dataset.js).classList.remove('show-view');
+       })
+      document.getElementById(e.currentTarget.dataset.js).classList.add('show-view')
+    })
+  })
 
 
   newSubmitButton.addEventListener('click', e => {
@@ -99,16 +110,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
   function goToMainMenu(username, playersData) {
-
+    console.log('gtmm 113')
+    let displayUsername = document.querySelector('.display-username')
+    displayUsername.innerText = username
     let logged_in = playersData.find(player => player.username == username)
     let host_id = logged_in.id
     username = logged_in.username
     let createMatchButton = document.querySelector('.create-match')
     let joinMatchButton = document.querySelector('.join-match')
 
-    greetUser.innerHTML = `Welcome, ${username}!`
-    show(createMatchButton)
-    show(joinMatchButton)
+    // greetUser.innerHTML = `Welcome, ${username}!`
+    // actually, you can't right now. Not by classname
+    // right. 
     createMatchButton.addEventListener('click', e => {
       let data = {
         winner_id: null,
@@ -117,7 +130,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         host_id: host_id.toString()
       }
       postFetch(matchesURL, data)
-      greetUser.innerHTML = `You have created a match! Please wait for someone to join.`
+      // greetUser.innerHTML = `You have created a match! Please wait for someone to join.`
 
     })
     joinMatchButton.addEventListener('click', e => {
@@ -184,7 +197,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
               matchId: match.id
             }
 
-            greetUser.innerHTML = `You have joined ${hostName}'s match!`
+            // greetUser.innerHTML = `You have joined ${hostName}'s match!`
             callback()
           })
         }
@@ -197,7 +210,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     p1WinCountDiv.innerText = `${matchData.hostUsername}'s win count: ${p1WinCount}`
     p2WinCountDiv.innerText = `${matchData.loggedInUsername}'s win count: ${p2WinCount}`
     hideSingle(restartMatchButton)
-    greetUser.innerHTML = ``
+    // greetUser.innerHTML = ``
     gameInfo.style.display = 'block';
     document.querySelector('.user-form').style.display = "none"
     let bestOfSets = Math.ceil(matchData.bestOf / 2)
