@@ -10,6 +10,21 @@
   <link rel="stylesheet" href="index.css">
   <script src="https://kit.fontawesome.com/7e75b8cc69.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+  <script>
+    // Add active class to the current button (highlight it)
+    var header = document.getElementById("nav-links__container");
+    var navLinks = document.getElementsByClassName("nav-link");
+    console.log(navLinks)
+    for (var i = 0; i < navLinks.length; i++) {
+      navLinks[i].addEventListener("click", function() {
+      var current = document.getElementsByClassName("active");
+      if (current.length > 0) { 
+        current[0].className = current[0].className.replace(" active", "");
+      }
+      this.className += " active";
+      });
+    }
+    </script>
 </head>
 
 <body>
@@ -19,7 +34,7 @@
         <h2 class='display-username text-center'>Flatiron Ping-Pong</h2>
         <img src="http://www.wcyt.org/wp-content/uploads/2012/09/fancy-cat1.jpg" alt="placeholder image for user">
         <ul id="nav-links__container">
-          <li class="nav-link" data-js="home__view">
+          <li class="nav-link " data-js="home__view">
             <i class="fas fa-home"></i>
             Home
           </li>

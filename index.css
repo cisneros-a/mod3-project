@@ -88,11 +88,11 @@ li {
   transition: background-color 0.3s, color 0.3s;
 }
 
-#user-profile__container .nav-link:hover,
-#user-profile__container .nav-link:hover .fas {
+.active, #user-profile__container .nav-link:hover,
+.active, #user-profile__container .nav-link:hover .fas {
   background-color: rgb(245, 245, 245);
   color: rgb(27, 27, 27);
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color .2s, color .2s;
 }
 
 #main-view {
