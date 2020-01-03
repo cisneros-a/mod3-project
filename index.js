@@ -398,8 +398,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
   }
 
   let keepscore = () => {
+    hideSingle(restartMatchButton)
    
-
+    showSingle(document.querySelector('.current_match_div'))
     joinCreateContainer.classList.remove('show-view') 
     currentMatch.classList.add('show-view')
     p1WinCount = 0
@@ -465,6 +466,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   }
 
   function displayWinner(winner, matchData) {
+    hideSingle(document.querySelector('.current_match_div'))
     
     let updatedMatchURL = `http://localhost:3000/matches/${matchData.matchId}`
     if (winner == 'player1') {
@@ -732,6 +734,40 @@ window.addEventListener('DOMContentLoaded', (event) => {
       item.style.display = "block";
     })
   }
+
+//   let pp_table =   ` <div class="col-12">
+  
+//   <div id="pp__container" class="grid">
+//     <h2></h2>
+//     <div id="pp__table">
+//       <div id="net"></div>
+//       <div class="row">
+//         <div class="col-6 text-center">
+//           <h3 class="win-count winner-1-count">
+//             0
+//           </h3>
+//           <h2 class="player__name player1-name-score">
+//             __player_1_name__
+//           </h2>
+//           <h3 class="player__score player-1-score">
+//             0
+//           </h3>
+//         </div>
+//         <div class="col-6 text-center">
+//           <h3 class="win-count winner-2-count">
+//             0
+//           </h3>
+//           <h2 class="player__name player2-name-score">
+//             __player_2_name__
+//           </h2>
+//           <h3 class="player__score player-2-score">
+//             0
+//           </h3>
+//         </div>
+//       </div>
+//     </div>
+//   </div>
+// </div> `
 
 
 
