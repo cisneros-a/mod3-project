@@ -182,6 +182,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
   let labels = ['1', '2', '3', '4', '5']
   let dataSet = [12, 20, 40, 70, 50]
+  let loggedInTotalMatches = []
 
 
   function populateUserStats(username, playersData){
@@ -215,16 +216,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
           let loggedInLostMatches = allMatches.filter(function(match){
             return match.winner_id === playerId && match.loser_id === loggedInId
           })
-          let loggedInTotalMatches = loggedInWonMatches.concat(loggedInLostMatches)
+          loggedInTotalMatches = loggedInWonMatches.concat(loggedInLostMatches)
           let winRate = (loggedInWonMatches.length / loggedInTotalMatches.length)
           winRates.push(winRate)
           
         })
 
-        // console.log(loggedInUniqueMatches)
-        // console.log(labels)
-        labels.push('')
-        winRates.push(1)
+        if (loggedInTotalMatches.length == 0){
+          labels = []
+          winRates = []
+        } else {
+         labels.push('')
+         winRates.push(1)
+        }
 
         addData(plainStatsChart, labels, winRates)
 
@@ -396,8 +400,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
   }
 
   let keepscore = () => {
+    hideSingle(restartMatchButton)
    
-
+    showSingle(document.querySelector('.current_match_div'))
     joinCreateContainer.classList.remove('show-view') 
     currentMatch.classList.add('show-view')
     p1WinCount = 0
@@ -463,6 +468,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   }
 
   function displayWinner(winner, matchData) {
+    hideSingle(document.querySelector('.current_match_div'))
     
     let updatedMatchURL = `http://localhost:3000/matches/${matchData.matchId}`
     if (winner == 'player1') {
@@ -730,6 +736,40 @@ window.addEventListener('DOMContentLoaded', (event) => {
       item.style.display = "block";
     })
   }
+
+//   let pp_table =   ` <div class="col-12">
+  
+//   <div id="pp__container" class="grid">
+//     <h2></h2>
+//     <div id="pp__table">
+//       <div id="net"></div>
+//       <div class="row">
+//         <div class="col-6 text-center">
+//           <h3 class="win-count winner-1-count">
+//             0
+//           </h3>
+//           <h2 class="player__name player1-name-score">
+//             __player_1_name__
+//           </h2>
+//           <h3 class="player__score player-1-score">
+//             0
+//           </h3>
+//         </div>
+//         <div class="col-6 text-center">
+//           <h3 class="win-count winner-2-count">
+//             0
+//           </h3>
+//           <h2 class="player__name player2-name-score">
+//             __player_2_name__
+//           </h2>
+//           <h3 class="player__score player-2-score">
+//             0
+//           </h3>
+//         </div>
+//       </div>
+//     </div>
+//   </div>
+// </div> `
 
 
 
