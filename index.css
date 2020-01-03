@@ -47,9 +47,16 @@ li {
   display: block;
 }
 
+.container:after {
+  clear: both;
+}
+
+
+
 /* Global ID Styles */
 
 /* User Profile Styles */
+
 
 #user-profile__container,
 #main-view {

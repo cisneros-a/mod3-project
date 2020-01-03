@@ -1,10 +1,15 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
+  let myChart = document.getElementById('myChart').getContext('2d') 
+
+
 
   // hellooooooo
+
   let existingSubmitButton = document.querySelector('#submit-existing')
   let newSubmitButton = document.querySelector('#submit-new')
   let cohortSelect = document.querySelector('#existing-cohort')
+  let statsCohort = document.querySelector('#stats-cohort')
   let userForms = document.querySelectorAll(".user-form");
   let createMatchButton = document.querySelector('.create-match')
   let joinMatchButton = document.querySelector('.join-match')
@@ -31,6 +36,60 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let userWonMatchesDiv = document.querySelector('.stats-won-matches')
   let userLostMatchesDiv = document.querySelector('.stats-lost-matches')
   // clearGameInfo()
+
+  let plainStatsChart = new Chart(myChart, {
+    type: 'bar',
+    data:{
+      labels: [],
+      datasets:[{
+        label:'Win Rate %',
+        data:[
+          
+        ],
+        backgroundColor: 'cyan',
+        borderWidth: 1,
+        borderColor: 'white',
+        hoverBorderWidth: 3,
+        hoverBorderColor: 'red'
+      }]
+    },
+    options:{
+      layout:{
+        padding: {
+          bottom: 50
+        }
+      },
+      labels: {
+        color: 'cyan'
+      }
+     
+    }
+  })
+
+ 
+
+
+  function addData(chart, players, winPercentages) {
+    players.forEach((player)=> {
+    chart.data.labels.push(player)
+    })
+    winPercentages.forEach((winPercentage) =>{
+    chart.data.datasets.forEach((dataset) => {
+         dataset.data.push(winPercentage);
+    })
+  });
+    chart.update();
+    // console.log(chart.data.labels)
+    // console.log(chart.data.datasets)
+}
+
+
+
+
+
+
+
+  
 
   const navLinks = document.querySelectorAll('.nav-link')
 
@@ -105,6 +164,101 @@ window.addEventListener('DOMContentLoaded', (event) => {
     goToMainMenu(username, data)
   }
 
+  let labels = ['1', '2', '3', '4', '5']
+  let dataSet = [12, 20, 40, 70, 50]
+
+
+  function populateUserStats(username, playersData){
+    // console.log(playersData)
+    let loggedInId= playersData.find(player => player.username == username).id
+    labels = []
+    dataSet = []
+    let playerObjects = []
+    let usernames = []
+    let winRates = []
+    fetch(matchesURL)
+    .then(res => res.json())
+    .then(allMatches => {
+      getUserMatches(loggedInId, allMatches)
+      let matches = getUserMatches(loggedInId, allMatches)
+        let uniquePlayerIds = findUniquePlayers(loggedInId, matches)
+       fetch(playersURL)
+       .then(res => res.json())
+       .then(players => {
+        uniquePlayerIds.forEach(playerId => {
+          playerObjects.push(players.find(player => player.id == playerId))
+        })
+        playerObjects.forEach(object =>{
+          labels.push((object.username))
+        })
+
+        uniquePlayerIds.forEach(playerId =>{
+          console.log(playerId)
+          let loggedInWonMatches = allMatches.filter(function(match){
+            return match.winner_id === loggedInId && match.loser_id === playerId 
+          })
+          let loggedInLostMatches = allMatches.filter(function(match){
+            return match.winner_id === playerId && match.loser_id === loggedInId
+          })
+          let loggedInTotalMatches = loggedInWonMatches.concat(loggedInLostMatches)
+          let winRate = (loggedInWonMatches.length / loggedInTotalMatches.length)
+          winRates.push(winRate)
+          
+        })
+
+        // console.log(loggedInUniqueMatches)
+        // console.log(labels)
+
+
+        addData(plainStatsChart, labels, winRates)
+
+       })
+      //  console.log(labels)
+    })
+  }
+
+  // let loggedInWonMatches = data.filter(function(match){
+  //   return match.winner_id === matchData.loggedInId && match.loser_id === playerId 
+  // })
+  // let loggedInLostMatches = data.filter(function(match){
+  //   return match.winner_id === playerId && match.loser_id === matchData.loggedInId
+  // })
+  // let loggedInTotalMatches = loggedInWonMatches.concat(loggedInLostMatches)
+
+
+//   function showRecords(loggedInId) {
+//   statsCohort.onchange = function (){
+//   let cohortName = document.querySelector('#stats-cohort').value
+//   // console.log(cohortName)
+//   // console.log(loggedInId)
+//   labels = []
+//   dataSet = []
+//   let playerObjects = []
+//   let usernames = []
+//   fetch(matchesURL)
+//       .then(res => res.json())
+//       .then(allMatches => {
+//         let matches = getUserMatches(loggedInId, allMatches)
+//         let uniquePlayerIds = findUniquePlayers(loggedInId, matches)
+//        fetch(playersURL)
+//        .then(res => res.json())
+//        .then(players => {
+//         uniquePlayerIds.forEach(playerId => {
+//           playerObjects.push(players.find(player => player.id == playerId))
+//         })
+//         playerObjects.forEach(object =>{
+//           labels.push(object.username)
+//         })
+        
+
+//        })
+//     addData(plainStatsChart, labels, dataSet)
+        
+//       })
+//   }
+// }
+
+
   cohortSelect.onchange = function () {
     let cohortName = document.querySelector('#existing-cohort').value
     let studentDropdown = document.querySelector('#existing-students')
@@ -128,13 +282,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
   function goToMainMenu(username, playersData) {
-    console.log(playersData)
-    console.log('gtmm 113')
+    // addData(plainStatsChart, labels, dataSet)
     let displayUsername = document.querySelector('.display-username')
     displayUsername.innerText = username
     let logged_in = playersData.find(player => player.username == username)
     let host_id = logged_in.id
     username = logged_in.username
+    // showRecords(host_id)
+
     
 
     
@@ -225,6 +380,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
   }
 
   let keepscore = () => {
+   
+
     joinCreateContainer.classList.remove('show-view') 
     currentMatch.classList.add('show-view')
     p1WinCount = 0
@@ -272,6 +429,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
       p1WinCount += 1
       p1WinCountDiv.innerText = `${p1WinCount}`
       if (p1WinCount == bestOf) {
+
         userTotalMatchesDiv.innerText = (parseInt(userTotalMatchesDiv.innerText) + 1)
         userLostMatchesDiv.innerText = (parseInt(userLostMatchesDiv.innerText) + 1)
         displayWinner('player1', matchData)
@@ -282,6 +440,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
       if (p2WinCount == bestOf) {
         userTotalMatchesDiv.innerText = (parseInt(userTotalMatchesDiv.innerText) + 1)
         userWonMatchesDiv.innerText = (parseInt(userWonMatchesDiv.innerText) + 1)
+
         displayWinner('player2', matchData)
       }
     }
@@ -327,23 +486,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
   }
 
-  function populateUserStats(username, playersData){
-    console.log(playersData)
-    let loggedInId= playersData.find(player => player.username == username).id
-    fetch(matchesURL)
-    .then(res => res.json())
-    .then(allMatches => {
-      let userWonMatches = allMatches.filter(function(match){
-        return match.winner_id === loggedInId
-      })
-      let userLostMatches = allMatches.filter(function(match){
-        return match.loser_id === loggedInId
-      })
-      let userTotalMatches = userWonMatches.concat(userLostMatches)
-        userWonMatchesDiv.innerText = userWonMatches.length
-        userLostMatchesDiv.innerText = userLostMatches.length
-        userTotalMatchesDiv.innerText = userTotalMatches.length
+  
+
+  function getUserMatches(loggedInId, allMatches){
+    let userWonMatches = allMatches.filter(function(match){
+      return match.winner_id === loggedInId
     })
+    let userLostMatches = allMatches.filter(function(match){
+      return match.loser_id === loggedInId
+    })
+    let userTotalMatches = userWonMatches.concat(userLostMatches)
+      userWonMatchesDiv.innerText = userWonMatches.length
+      userLostMatchesDiv.innerText = userLostMatches.length
+      userTotalMatchesDiv.innerText = userTotalMatches.length
+      return userTotalMatches
   }
 
   function afterMatchScreen(winner, matchData) {
@@ -458,6 +614,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
       .then(res => res.json())
       .then(data => data)
   };
+
+  function findUniquePlayers(loggedInId, matches){
+    let halfPlayers= matches.map(match => match.winner_id);
+    let secondHalfPlayers= matches.map(match => match.loser_id);
+    let allPlayers = halfPlayers.concat(secondHalfPlayers)
+    let players = removeDuplicates(allPlayers)
+    let uniquePlayers = players.filter(function(item) {
+      return item !== loggedInId
+  })
+    return uniquePlayers
+  }
+  
+  
+  
+  function removeDuplicates(arr) {
+    return arr.filter(function(v, idx) {
+        return arr.indexOf(v) == idx;
+    });
+  }
 
 
 
