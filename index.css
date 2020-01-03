@@ -34,6 +34,12 @@ li {
   display: block;
 }
 
+.container:after {
+  clear: both;
+}
+
+
+
 #user-profile__container,
 #main-view {
   height: 100vh;

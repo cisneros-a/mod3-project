@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css" />
   <link rel="stylesheet" href="index.css">
   <script src="https://kit.fontawesome.com/7e75b8cc69.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
 </head>
 <body>
   <div class="container-fluid">
@@ -49,8 +50,9 @@
           <img src="https://media.giphy.com/media/ECwTCTrHPVqKI/giphy.gif" alt="">
         </div>
         <div id="stats__container" class="viewport container">
-          <div class="row">
-            <div class="col-md-4">
+          <div class='container'>
+          <div class="row ">
+            <div class="col-md-4 container" >
               <div class="stats__card text-center">
                 <h3>Total Matches</h3>
                 <h2 class='stats-total-matches'>0</h2>
@@ -68,14 +70,46 @@
                 <h2 class='stats-lost-matches'> 0</h2>
               </div>
             </div>
-          </div>
+          </div> 
+        </div>
+          <div class='container'>
           <div class="row">
-            <div class="col-12">
-              <h3>Stats Chart Coming Soon</h3>
+            <div class="col-10">
+             <canvas id='myChart'></canvas>
             </div>
+            <!-- <div class ="col-3">
+            <form class='user-form'>
+              <fieldset>
+                <div class="form-group">
+                  <label for="existing-cohort"> Cohort: </label>
+                  <select class="form-control col-lg-3" id="stats-cohort">
+                    <option value=''>Select</option>
+                    <option>.Uniq(102819)</option>
+                    <option>Schema(091619)</option>
+                    <option>NoName(120819) </option>
+                    <option>Instructor</option>
+                    <option>Guest</option>
+                  </select><br>
+                  </div>
+              </fieldset>
+                  <fieldset class="form-group">
+                  <button type="submit" id="stats-submit-" class="btn btn-primary">Submit</button>
+                    
+                  </fieldset>
+            </form>
+            </div> -->
           </div>
-          <div class="row">
-            <div class="col-md-4">
+        </div>
+
+        
+  
+          <!-- <div class='container'>
+
+          <div class="row" > -->
+           
+
+            <!-- <br><br><br><br>
+            <div class="col-md-4 container">
               <div class="stats__card text-center">
                 <h3>Total Tourneys</h3>
                 <h2>0</h2>
@@ -92,9 +126,10 @@
                 <h3>Tourneys Lost</h3>
                 <h2>0</h2>
               </div>
-            </div>
-          </div>
-        </div>
+            </div> -->
+          <!-- </div>
+        </div>  -->
+      </div>
         <div id="current_match" class="viewport container">
           <h2>Current Match</h2>
           <div class='vs-record'> </div>
