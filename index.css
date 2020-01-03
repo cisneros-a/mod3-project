@@ -110,7 +110,7 @@ li {
 /* Ping-Pong Table Styles */
 
 #pp__container {
-  background-color: green;
+  background-color: rgb(34, 34, 34);
   grid-gap: 8px;
   grid-template-areas: 
     '. . . . . . . . . . . .'
@@ -122,7 +122,7 @@ li {
 }
 
 #pp__table {
-  background-color: red;
+  background-color:  rgb(27, 27, 27);
   grid-area: table;
   position: relative;
 }

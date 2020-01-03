@@ -238,7 +238,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let bestOfSets = Math.ceil(matchData.bestOf / 2)
 
     let displayLimit = document.querySelector('.display-limit')
-    displayLimit.innerText = `Score ${matchData.score} points to win!`
+    // displayLimit.innerText = `Score ${matchData.score} points to win!`
     // <div class='player1-name-score'> </div>
     let p1ns = document.querySelector('.player1-name-score')
     let p2ns = document.querySelector('.player2-name-score')
