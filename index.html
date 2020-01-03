@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,11 +10,12 @@
   <link rel="stylesheet" href="index.css">
   <script src="https://kit.fontawesome.com/7e75b8cc69.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
   <div class="container-fluid">
     <div class="row">
-      <aside id="user-profile__container" class="col-md-3 col-lg-2">
-        <h2 class='display-username'>Flatiron Ping-Pong</h2>
+      <aside id="user-profile__container" class="col-md-3">
+        <h2 class='display-username text-center'>Flatiron Ping-Pong</h2>
         <img src="http://www.wcyt.org/wp-content/uploads/2012/09/fancy-cat1.jpg" alt="placeholder image for user">
         <ul id="nav-links__container">
           <li class="nav-link" data-js="home__view">
@@ -39,7 +41,7 @@
         </ul>
       </aside>
       <!--  View Body  -->
-      <main id="main-view" class="col-md-9 col-lg-10">
+      <main id="main-view" class="col-md-9 ">
         <div id="home__view" class='viewport container-fluid show-view'>
           <h2>Welcome To Flatiron Ping-Pong!</h2>
           <!-- <div style="width:100%;height:0;padding-bottom:75%;position:relative;">
@@ -96,89 +98,132 @@
           </div>
         </div>
         <div id="current_match" class="viewport container">
-          <h2>Current Match</h2>
+
+          <div class="row">
+            <div class="col-12">
+              <!--    copy below here    -->
+              <div id="pp__container" class="grid">
+                <h2>Current Match</h2>
+                <div id="pp__table">
+                  <div id="net"></div>
+                  <div class="row">
+                    <div class="col-6 text-center">
+                      <h3 class="win-count winner-1-count">
+                        0
+                      </h3>
+                      <h2 class='player__name player1-name-score'>
+                        __player_1_name__
+                      </h2>
+                      <h3 class='player__score player-1-score'>
+                        0
+                      </h3>
+                    </div>
+                    <div class="col-6 text-center">
+                      <h3 class="win-count winner-2-count">
+                        0
+                      </h3>
+                      <h2 class='player__name player2-name-score'>
+                        __player_2_name__
+                      </h2>
+                      <h3 class='player__score player-2-score'>
+                        0
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--    copy above here    -->
+            </div>
+          </div>
           <div class='vs-record'> </div>
 
           <div class='display-limit'> </div>
           <div id='game-info'>
-    <div class='winner'> </div><u> </u> <br>
-    <div class='winner-1-count'> </div>
-    <div class='winner-2-count'> </div><br>
-    <div class='player1-name-score'> </div>
-    <div class="player-1-score">0</div><br>
-    <div class='player2-name-score'> </div>
-    <div class="player-2-score">0</div>
-  </div>
-  <button class="btn btn-success restart-match">Play again!</button>
+            <div class='winner'> </div><u> </u> <br>
+            <!-- <div class='winner-1-count'> </div>
+            <div class='winner-2-count'> </div><br>
+            <div class='player1-name-score'> </div>
+            <div class="player-1-score">0</div><br>
+            <div class='player2-name-score'> </div>
+            <div class="player-2-score">0</div> -->
+          </div>
+          <button class="btn btn-success restart-match">Play again!</button>
         </div>
 
         <div id="join-create_match" class="viewport container">
           <h2>Join or Create Match</h2>
           <button class="btn btn-success create-match">Create Match</button><br><br><br><br><br><br>
-  <button class="btn btn-info join-match join-create">Join Match</button><br><br><br><br><br><br>
+          <button class="btn btn-info join-match join-create">Join Match</button><br><br><br><br><br><br>
 
-  <h5></h5>
-  <ul class='matches-list'></ul class=''>
+          <h5></h5>
+          <ul class='matches-list'></ul class=''>
 
 
         </div>
         <div id="sign-in-up_view" class="viewport container">
           <!--      Put Code Below Here      -->
-          <form class='user-form'>
-    <fieldset>
-      <legend>Sign up!</legend>
-      <div class="form-group">
-        <label for="player-first-name"> First Name: </label>
-        <input type="text" class="form-control col-lg-4" id="player-first-name" placeholder="First name">
-      </div>
-      <div class="form-group">
-        <label for="player-last-name"> Last Name: </label>
-        <input type="text" class="form-control col-lg-4" id="player-last-name" placeholder="Last name">
-      </div>
-      <div class="form-group">
-        <label for="cohort-name"> Cohort: </label>
-        <select class="form-control col-lg-2" id="cohort">
-          <option>.Uniq(102819)</option>
-          <option>Schema(091619)</option>
-          <option>NoName(120819)</option>
-          <option>Instructor</option>
-          <option>Guest</option>
-        </select>
-      </div>
+          <div class="row">
+            <div class="col-12 col-md-6">
+              <form class='user-form'>
+                <fieldset>
+                  <legend>Sign up!</legend>
+                  <div class="form-group">
+                    <label for="player-first-name"> First Name: </label>
+                    <input type="text" class="form-control" id="player-first-name" placeholder="First name">
+                  </div>
+                  <div class="form-group">
+                    <label for="player-last-name"> Last Name: </label>
+                    <input type="text" class="form-control" id="player-last-name" placeholder="Last name">
+                  </div>
+                  <div class="form-group">
+                    <label for="cohort-name"> Cohort: </label>
+                    <select class="form-control" id="cohort">
+                      <option>.Uniq(102819)</option>
+                      <option>Schema(091619)</option>
+                      <option>NoName(120819)</option>
+                      <option>Instructor</option>
+                      <option>Guest</option>
+                    </select>
+                  </div>
 
-    </fieldset>
-    <fieldset class="form-group">
-      <button type="submit" id="submit-new" class="btn btn-primary">Submit</button>
-    </fieldset>
-  </form>
-          
-          <form class='user-form'>
-    <fieldset>
-      <legend>Sign in!</legend>
-      <div class="form-group">
-        <label for="existing-cohort"> Cohort: </label>
-        <select class="form-control col-lg-2" id="existing-cohort">
-          <option value=''>Select</option>
-          <option>.Uniq(102819)</option>
-          <option>Schema(091619)</option>
-          <option>NoName(120819) </option>
-          <option>Instructor</option>
-          <option>Guest</option>
-        </select><br>
-        <label for="existing-students"> Username: </label>
-        <select class="form-control col-lg-2" id="existing-students">
-        </select>
-        </div>
+                </fieldset>
+                <fieldset class="form-group">
+                  <button type="submit" id="submit-new" class="btn btn-primary">Submit</button>
+                </fieldset>
+              </form>
+            </div>
 
-    </fieldset>
-        <fieldset class="form-group">
-        <button type="submit" id="submit-existing" class="btn btn-primary">Submit</button>
-        </fieldset>
-  </form>
+            <div class="col-12 col-md-6">
+              <form class='user-form'>
+                <fieldset>
+                  <legend>Sign in!</legend>
+                  <div class="form-group">
+                    <label for="existing-cohort"> Cohort: </label>
+                    <select class="form-control " id="existing-cohort">
+                      <option value=''>Select</option>
+                      <option>.Uniq(102819)</option>
+                      <option>Schema(091619)</option>
+                      <option>NoName(120819) </option>
+                      <option>Instructor</option>
+                      <option>Guest</option>
+                    </select><br>
+                    <label for="existing-students"> Username: </label>
+                    <select class="form-control " id="existing-students">
+                    </select>
+                  </div>
+
+                </fieldset>
+                <fieldset class="form-group">
+                  <button type="submit" id="submit-existing" class="btn btn-primary">Submit</button>
+                </fieldset>
+              </form>
+            </div>
+          </div>
         </div>
       </main>
     </div>
   </div>
   <script type="text/javascript" src="./index.js"></script>
 </body>
+
 </html>
