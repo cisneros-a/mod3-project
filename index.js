@@ -1,7 +1,7 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
   let myChart = document.getElementById('myChart').getContext('2d') 
-
+  Chart.defaults.global.defaultFontColor='cyan';
 
 
   // hellooooooo
@@ -43,10 +43,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
       labels: [],
       datasets:[{
         label:'Win Rate %',
+        color: 'orange',
+        maxBarThickness: 62,
+        minBarLength: 7,
+        
         data:[
           
         ],
-        backgroundColor: 'cyan',
+        backgroundColor: 'white',
         borderWidth: 1,
         borderColor: 'white',
         hoverBorderWidth: 3,
@@ -57,11 +61,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
       layout:{
         padding: {
           bottom: 50
-        }
+        },
+        scale: {
+          scaleLabel:{
+              fontColor: 'red'
+          }
       },
-      labels: {
-        color: 'cyan'
+      scales: {
+          yAxes: [{
+              ticks: {
+                  beginAtZero:true
+              }
+          }]
       }
+      },
+      legend: {
+      labels: {
+        fontColor: 'cyan'
+      }
+    }
      
     }
   })
@@ -174,7 +192,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
     labels = []
     dataSet = []
     let playerObjects = []
-    let usernames = []
     let winRates = []
     fetch(matchesURL)
     .then(res => res.json())
@@ -208,7 +225,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
         // console.log(loggedInUniqueMatches)
         // console.log(labels)
-
+        labels.push('')
+        winRates.push(1)
 
         addData(plainStatsChart, labels, winRates)
 
@@ -720,3 +738,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
 })
+
+// var options = {
+  // type: 'bar',
+  //     data: {
+  //         labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+  //         datasets: [{
+  //             label: '# of Votes',
+  //             data: [12, 19, 3, 5, 2, 3],
+  //             backgroundColor: 'red',
+  //             borderWidth: 1
+  //         }]
+  //     },
+  //     options: {
+          
+  //     }
+  //  };
