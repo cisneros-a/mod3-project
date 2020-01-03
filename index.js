@@ -1,5 +1,11 @@
 window.addEventListener('DOMContentLoaded', (event) => {
+
   let myChart = document.getElementById('myChart').getContext('2d') 
+
+
+
+  // hellooooooo
+
   let existingSubmitButton = document.querySelector('#submit-existing')
   let newSubmitButton = document.querySelector('#submit-new')
   let cohortSelect = document.querySelector('#existing-cohort')
@@ -315,15 +321,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
     fetch(matchesURL)
       .then(res => res.json())
       .then(matchesData => matchesData.forEach(match => {
+        
         let logged_in = playersData.find(player => player.username == username)
-        if (match.host_id) {
+        
+        if (match.host_id && logged_in.id !== match.host_id) {
           let hostName = playersData.find(player => player.id == match.host_id).username
           let matchList = document.querySelector('.matches-list')
           let matchLi = document.createElement('li')
           matchLi.innerHTML = `<h5>Match hosted by ${hostName}.</h5>`
-          button = document.createElement('button')
+          button = document.createElement('span')
           button.innerText = "join"
           button.setAttribute('id', `${match.host_id}`)
+          button.setAttribute('class', `badge badge-pill badge-dark`)
           matchList.appendChild(matchLi)
           matchList.appendChild(button)
 
@@ -377,8 +386,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
     currentMatch.classList.add('show-view')
     p1WinCount = 0
     p2WinCount = 0
-    p1WinCountDiv.innerText = `${matchData.hostUsername}'s win count: ${p1WinCount}`
-    p2WinCountDiv.innerText = `${matchData.loggedInUsername}'s win count: ${p2WinCount}`
+    p1WinCountDiv.innerText = `${p1WinCount}`
+    p2WinCountDiv.innerText = `${p2WinCount}`
     hideSingle(restartMatchButton)
     // greetUser.innerHTML = ``
     gameInfo.style.display = 'block';
@@ -386,12 +395,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let bestOfSets = Math.ceil(matchData.bestOf / 2)
 
     let displayLimit = document.querySelector('.display-limit')
-    displayLimit.innerText = `Score ${matchData.score} points to win!`
+    // displayLimit.innerText = `Score ${matchData.score} points to win!`
     // <div class='player1-name-score'> </div>
     let p1ns = document.querySelector('.player1-name-score')
     let p2ns = document.querySelector('.player2-name-score')
-    p1ns.innerText = `${matchData.hostUsername}'s score:`
-    p2ns.innerText = `${matchData.loggedInUsername}'s score:`
+    p1ns.innerText = `${matchData.hostUsername}`
+    p2ns.innerText = `${matchData.loggedInUsername}`
     if (!matchData.rematch) {
       window.addEventListener("keyup", e => {
         if (e.key === 'ArrowLeft') {
@@ -416,10 +425,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
   function winCount(winner, matchData, bestOf) {
-    
     if (winner == 'player1') {
       p1WinCount += 1
-      p1WinCountDiv.innerText = `${matchData.hostUsername}'s win count: ${p1WinCount}`
+      p1WinCountDiv.innerText = `${p1WinCount}`
       if (p1WinCount == bestOf) {
 
         userTotalMatchesDiv.innerText = (parseInt(userTotalMatchesDiv.innerText) + 1)
@@ -428,7 +436,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
       }
     } else if (winner == 'player2') {
       p2WinCount += 1
-      p2WinCountDiv.innerText = `${matchData.loggedInUsername}'s win count: ${p2WinCount}`
+      p2WinCountDiv.innerText = `${p2WinCount}`
       if (p2WinCount == bestOf) {
         userTotalMatchesDiv.innerText = (parseInt(userTotalMatchesDiv.innerText) + 1)
         userWonMatchesDiv.innerText = (parseInt(userWonMatchesDiv.innerText) + 1)
