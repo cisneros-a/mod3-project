@@ -184,6 +184,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
   let labels = ['1', '2', '3', '4', '5']
   let dataSet = [12, 20, 40, 70, 50]
+  let loggedInTotalMatches = []
 
 
   function populateUserStats(username, playersData){
@@ -217,16 +218,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
           let loggedInLostMatches = allMatches.filter(function(match){
             return match.winner_id === playerId && match.loser_id === loggedInId
           })
-          let loggedInTotalMatches = loggedInWonMatches.concat(loggedInLostMatches)
+          loggedInTotalMatches = loggedInWonMatches.concat(loggedInLostMatches)
           let winRate = (loggedInWonMatches.length / loggedInTotalMatches.length)
           winRates.push(winRate)
           
         })
 
-        // console.log(loggedInUniqueMatches)
-        // console.log(labels)
-        labels.push('')
-        winRates.push(1)
+        if (loggedInTotalMatches.length == 0){
+          labels = []
+          winRates = []
+        } else {
+         labels.push('')
+         winRates.push(1)
+        }
 
         addData(plainStatsChart, labels, winRates)
 
